@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Names looked up by the game's UnityPlayer via getIdentifier(name, type, ourPackage) -->
+    <string name="game_view_content_description">Game view</string>
+    <item name="unitySurfaceView" type="id"/>
+    <color name="staticSplashScreenBackgroundColor">#000000</color>
+    <string name="app_name">Sea of Stars Duo</string>
+</resources>

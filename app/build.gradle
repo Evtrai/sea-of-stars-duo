@@ -1,0 +1,44 @@
+plugins { id 'com.android.application' }
+
+// CI passes -PversionCode=<run number> -PversionName=<tag or 0.2-sha>; local builds use the defaults.
+def vCode = (project.findProperty('versionCode') ?: '1').toString().toInteger()
+def vName = (project.findProperty('versionName') ?: '0.2-dev').toString()
+
+// Release signing comes from the environment (CI secrets or your shell). Without it, release builds
+// fall back to the debug key so `assembleRelease` always produces an installable APK.
+def ksPath = System.getenv('SOSDUO_KEYSTORE')
+def haveKeystore = ksPath && file(ksPath).exists()
+
+android {
+    namespace 'com.evtrai.sosduo'
+    compileSdk 35
+    ndkVersion '27.3.13750724'
+    defaultConfig {
+        applicationId 'com.evtrai.sosduo'
+        minSdk 28
+        targetSdk 35
+        versionCode vCode
+        versionName vName
+        ndk { abiFilters 'arm64-v8a' }
+        externalNativeBuild { cmake { cppFlags '-std=c++17' } }
+    }
+    signingConfigs {
+        release {
+            if (haveKeystore) {
+                storeFile file(ksPath)
+                storePassword System.getenv('SOSDUO_KEYSTORE_PASSWORD')
+                keyAlias System.getenv('SOSDUO_KEY_ALIAS')
+                keyPassword System.getenv('SOSDUO_KEY_PASSWORD')
+            }
+        }
+    }
+    buildTypes {
+        release {
+            // Everything game-side is reached by reflection; never shrink or obfuscate.
+            minifyEnabled false
+            signingConfig haveKeystore ? signingConfigs.release : signingConfigs.debug
+        }
+    }
+    externalNativeBuild { cmake { path 'src/main/cpp/CMakeLists.txt'; version '3.31.6' } }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+}
