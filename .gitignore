@@ -1,0 +1,17 @@
+# Game-derived / large / personal data: never version
+apk/
+extract/
+dump/
+save-backup/
+shots/
+tools/Il2CppDumper/
+*.sos
+# Build outputs / local config
+.gradle/
+build/
+app/build/
+app/.cxx/
+local.properties
+*.apk
+*.jks
+*.keystore

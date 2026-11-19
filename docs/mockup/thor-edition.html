@@ -1,0 +1,268 @@
+<title>Sea of Stars Thor Edition</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;500;600;700&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: one handheld in the middle of a night sky; everything else is notes pinned under it. Single dark look by choice. */
+:root{
+  color-scheme: dark;
+  --sky:#070b18; --sky2:#0d1530; --ink:#e9ecf7; --dim:#94a0c4; --line:#27325a;
+  --panel:#0e1838; --panel2:#152250; --edge:#5f7fd6; --gold:#f2c869; --gold2:#b98a2f;
+  --sun:#ffb238; --moon:#8fb6ff; --hp:#5fd08a; --mp:#57a8ff; --bad:#ff6b6b; --poison:#b07cff; --arcane:#ff7bd0;
+  --parch:#e6d3a3; --parch2:#c9ae74; --sepia:#5a3d1e; --room:#d2b67c;
+  --px:"Pixelify Sans","Courier New",monospace; --body:"Figtree",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{background:var(--sky)}
+body{font-family:var(--body);color:var(--ink);line-height:1.55;font-size:16px;
+  background:radial-gradient(120% 60% at 50% 0%,var(--sky2),var(--sky) 70%);
+  padding-block:28px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:860px;margin:0 auto;display:flex;flex-direction:column;gap:28px}
+h1{font-family:var(--px);font-weight:600;font-size:clamp(28px,5vw,40px);margin:0;letter-spacing:.02em;text-wrap:balance;color:var(--gold)}
+h2{font-family:var(--px);font-weight:500;font-size:22px;margin:0 0 10px;color:var(--ink);text-wrap:balance}
+p{margin:0;max-width:66ch;color:var(--dim)} p b{color:var(--ink);font-weight:600}
+.lede{font-size:17px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tabs button{font-family:var(--px);font-size:16px;color:var(--dim);background:var(--panel);border:1px solid var(--line);padding:8px 16px;cursor:pointer;border-radius:2px}
+.tabs button[aria-selected="true"]{color:var(--sky);background:var(--gold);border-color:var(--gold)}
+.tabs button:focus-visible,.cmd:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.cap{font-size:14px;color:var(--dim);min-height:3em}
+
+/* the handheld */
+.thor{background:#1a1d2b;border:1px solid #343a55;border-radius:22px;padding:14px;display:flex;flex-direction:column;gap:0;align-items:center;box-shadow:0 30px 80px #0009}
+.top{width:100%;aspect-ratio:16/9;background:#000;border-radius:8px;overflow:hidden;position:relative}
+.top canvas{width:100%;height:100%;display:block;image-rendering:pixelated}
+.tag{position:absolute;left:8px;bottom:8px;font-family:var(--px);font-size:12px;color:#cfe0ff;background:#0009;padding:2px 8px;border-radius:2px}
+.hinge{width:70%;height:14px;background:linear-gradient(#11131d,#262a3d,#11131d);border-radius:0}
+.bot{width:72%;aspect-ratio:1240/1080;background:var(--sky);border-radius:8px;overflow:hidden;container-type:inline-size;position:relative}
+@media (max-width:560px){.bot{width:100%}.hinge{width:90%}.thor{padding:8px;border-radius:14px}}
+
+/* bottom-screen UI: all sizes in cqw so it scales like a real 1240x1080 panel */
+.scr{position:absolute;inset:0;display:flex;flex-direction:column;font-family:var(--px);font-size:2.5cqw;line-height:1.15;color:var(--ink);
+  background:linear-gradient(#0a1230,#070b1c)}
+.hdr{display:flex;justify-content:space-between;align-items:center;padding:1.4cqw 2.4cqw;border-bottom:.3cqw solid var(--edge);background:var(--panel2)}
+.hdr .area{color:var(--gold);font-size:3.1cqw;font-weight:600}
+.hdr .meta{display:flex;gap:3cqw;color:var(--dim)} .hdr .meta b{color:var(--gold);font-weight:500}
+.main{flex:1;display:grid;grid-template-columns:34fr 66fr;gap:1.6cqw;padding:1.6cqw;min-height:0}
+.col{display:flex;flex-direction:column;gap:1.4cqw;min-height:0;min-width:0}
+.pn{background:var(--panel);border:.3cqw solid var(--edge);box-shadow:inset 0 0 0 .3cqw #0a1230;padding:1.3cqw 1.5cqw;min-width:0}
+.pn h3{margin:0 0 1cqw;font-size:2.3cqw;font-weight:500;color:var(--moon);letter-spacing:.08em;text-transform:uppercase}
+.ch{display:grid;grid-template-columns:auto 1fr auto;gap:.3cqw 1.2cqw;align-items:center;padding:.7cqw 0}
+.ch+.ch{border-top:.2cqw solid var(--line)}
+.face{width:5.6cqw;height:5.6cqw;grid-row:span 2;border:.3cqw solid var(--gold2);image-rendering:pixelated}
+.ch .nm{font-size:2.6cqw} .ch .lv{color:var(--dim);font-size:2.1cqw}
+.bars{grid-column:2/4;display:grid;grid-template-columns:1fr 1fr;gap:1cqw;font-size:2cqw;color:var(--dim)}
+.bar{height:1.1cqw;background:#050817;border:.2cqw solid var(--line);margin-top:.3cqw}
+.bar i{display:block;height:100%}
+.obj{color:var(--ink);font-size:2.5cqw} .obj small{display:block;color:var(--dim);font-size:2.1cqw;margin-top:.6cqw}
+.prog{display:grid;grid-template-columns:1fr auto;gap:.5cqw 1cqw;font-size:2.2cqw;color:var(--dim)} .prog b{color:var(--ink);font-weight:500}
+.mapbox{flex:1;min-height:0;padding:.8cqw;position:relative;display:flex}
+.mapbox canvas{width:100%;height:100%;display:block}
+.cmds{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2cqw;padding:0 1.6cqw 1.6cqw}
+.cmd{font-family:var(--px);font-size:2.5cqw;color:var(--ink);background:var(--panel2);border:.3cqw solid var(--edge);padding:1.5cqw .5cqw;cursor:pointer;display:flex;gap:1cqw;align-items:center;justify-content:center}
+.cmd:hover{background:#1d2f6e;color:var(--gold)} .cmd svg{width:3.4cqw;height:3.4cqw}
+
+/* battle */
+.orbs{display:flex;gap:1.2cqw;align-items:center}
+.orb{width:4.2cqw;height:4.2cqw;border-radius:50%;border:.3cqw solid var(--line)}
+.orb.on{background:radial-gradient(circle at 35% 30%,#fff,#7fe3ff 40%,#2a7bd6);border-color:#bff;box-shadow:0 0 2cqw #5cf8}
+.boost{display:grid;grid-template-columns:1fr auto;gap:.5cqw;font-size:2.2cqw;color:var(--dim);margin-top:1cqw}
+.pips{display:flex;gap:.6cqw} .pip{width:2.4cqw;height:2.4cqw;transform:rotate(45deg);border:.3cqw solid var(--gold2);margin:.6cqw}
+.pip.on{background:var(--gold)}
+.combo{font-size:2.1cqw;color:var(--dim);margin-top:.8cqw} .combo b{color:var(--ink);font-weight:500} .combo .no{opacity:.45}
+.en{display:grid;grid-template-columns:auto 1fr;gap:1.6cqw;align-items:center;padding:1.2cqw 0}
+.en+.en{border-top:.2cqw solid var(--line)}
+.cd{width:8cqw;height:8cqw;display:grid;place-items:center;font-size:4.4cqw;font-weight:700;color:var(--sky);background:var(--gold);
+  clip-path:polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%)}
+.cd.hot{background:var(--bad);color:#fff}
+.en .nm{font-size:2.8cqw;display:flex;justify-content:space-between;gap:1cqw} .en .nm span{color:var(--dim);font-size:2.1cqw}
+.locks{display:flex;gap:.8cqw;margin-top:.8cqw;flex-wrap:wrap}
+.lock{width:6cqw;height:6cqw;background:#050817;border:.3cqw solid var(--edge);display:grid;place-items:center;position:relative}
+.lock svg{width:4.2cqw;height:4.2cqw}
+.lock.x{opacity:.35;border-color:var(--line)} .lock.x::after{content:"";position:absolute;inset:0;background:linear-gradient(45deg,transparent 46%,var(--bad) 46% 54%,transparent 54%)}
+.who{font-size:2cqw;color:var(--dim);margin-top:.7cqw} .who b{color:var(--hp);font-weight:500}
+
+/* game menu on bottom */
+.gm{flex:1;margin:1.6cqw;display:flex;flex-direction:column;min-height:0}
+.gmt{display:flex;gap:.6cqw} .gmt span{padding:1cqw 2.4cqw;background:var(--panel);border:.3cqw solid var(--line);border-bottom:0;color:var(--dim)}
+.gmt span.on{background:var(--panel2);color:var(--gold);border-color:var(--edge)}
+.gmb{flex:1;background:var(--panel2);border:.3cqw solid var(--edge);padding:2cqw;display:grid;grid-template-columns:1fr 1.2fr;gap:2cqw;min-height:0}
+.eq{display:grid;gap:1cqw;align-content:start} .eq div{display:flex;justify-content:space-between;gap:1cqw;padding:1cqw 1.4cqw;background:var(--panel);border:.2cqw solid var(--line)}
+.eq div.sel{border-color:var(--gold);color:var(--gold)} .eq small{color:var(--dim)}
+.note{position:absolute;right:1.6cqw;bottom:1.6cqw;left:1.6cqw;text-align:center;font-family:var(--body);font-size:2.2cqw;color:var(--sky);background:var(--gold);padding:.8cqw}
+
+/* notes under the device */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:4px}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14.5px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-family:var(--px);font-weight:500;color:var(--moon);font-size:15px;background:var(--panel)}
+tr:last-child td{border-bottom:0} td:first-child{color:var(--ink);font-weight:600;white-space:nowrap}
+td{color:var(--dim)}
+.st{font-family:var(--px);font-size:13px;padding:1px 8px;border:1px solid;white-space:nowrap}
+.st.ok{color:var(--hp)} .st.new{color:var(--gold)} .st.risk{color:var(--bad)}
+.phases{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+.ph{border-left:3px solid var(--gold2);padding:2px 0 2px 14px;min-width:0}
+.ph h4{font-family:var(--px);font-weight:500;margin:0 0 4px;font-size:17px;color:var(--gold)} .ph p{font-size:14.5px}
+</style>
+
+<div class="wrap">
+  <header>
+    <h1>Sea of Stars: Thor Edition</h1>
+    <p class="lede">A mockup of the dual-screen build. The top screen is the game with its HUD removed. The bottom screen carries everything the HUD and menus used to, plus a map the game never had. Switch states to see how it changes.</p>
+  </header>
+
+  <div class="tabs" role="tablist" aria-label="Game state">
+    <button role="tab" id="t-explore" aria-selected="true" data-s="explore">Exploring</button>
+    <button role="tab" id="t-battle" aria-selected="false" data-s="battle">In battle</button>
+    <button role="tab" id="t-menu" aria-selected="false" data-s="menu">Menu open</button>
+  </div>
+  <p class="cap" id="cap"></p>
+
+  <div class="thor">
+    <div class="top"><canvas id="game" width="320" height="180" aria-label="Top screen: the game, with no HUD"></canvas><span class="tag">TOP · 1920×1080 · game only, HUD moved below</span></div>
+    <div class="hinge"></div>
+    <div class="bot" id="bot"></div>
+  </div>
+
+  <section>
+    <h2>Where every panel gets its data</h2>
+    <div class="tbl"><table>
+      <tr><th>Panel</th><th>What feeds it</th><th>State</th></tr>
+      <tr><td>Party, HP, MP, gold</td><td>The game's party and stats managers, read live in memory. Portraits are the game's own sprites.</td><td><span class="st ok">working today</span></td></tr>
+      <tr><td>Lock grid</td><td>Each enemy's cast: locks by damage type, which are broken, turns until it fires.</td><td><span class="st ok">data working</span></td></tr>
+      <tr><td>Live Mana, combo points</td><td>The encounter's Live Mana handler and combo meter, plus which combos the current points can pay for.</td><td><span class="st ok">data working</span></td></tr>
+      <tr><td>Dungeon map</td><td>Sea of Stars has no dungeon maps, so the app charts one: it samples the level's walkable floor around the party and inks in rooms as you walk them. Save points, campfires, chests and exits are the level's real objects.</td><td><span class="st new">new</span></td></tr>
+      <tr><td>Objective</td><td>The destination the game's own world map flashes. The game stores a place, not a sentence, so this reads "Head to …".</td><td><span class="st new">new</span></td></tr>
+      <tr><td>Region progress</td><td>The treasure and conch counts the game shows on its map once you own the parrot relic. Hidden until then, as in the game.</td><td><span class="st new">new</span></td></tr>
+      <tr><td>Menu on the bottom</td><td>The game's real menu, drawn by the game engine on the second screen and driven by the controller or touch. Nothing is rebuilt, so equipping and item use behave exactly as the game intends.</td><td><span class="st risk">needs device proof</span></td></tr>
+    </table></div>
+  </section>
+
+  <section>
+    <h2>Build order</h2>
+    <div class="phases">
+      <div class="ph"><h4>0 · Prove the second screen</h4><p>Hand the engine the bottom display and get it to draw one frame there. This decides whether menus are engine-drawn or app-drawn.</p></div>
+      <div class="ph"><h4>1 · Clean top, new bottom shell</h4><p>Hide the top HUD. Rebuild the bottom screen in the game's font and frame art with the exploring layout.</p></div>
+      <div class="ph"><h4>2 · Battle board</h4><p>Lock grid, Live Mana, combo points and party status, switching in when a fight starts.</p></div>
+      <div class="ph"><h4>3 · Dungeon cartographer</h4><p>Chart levels as you explore, with markers and the objective. Maps persist per area.</p></div>
+      <div class="ph"><h4>4 · Menus below</h4><p>Party, Items, Relics and World Map open on the bottom screen while the game keeps running above.</p></div>
+      <div class="ph"><h4>5 · Polish</h4><p>Transitions, cutscene dimming, touch, a release build and a full play session to shake it out.</p></div>
+    </div>
+  </section>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const ICO={
+ sword:'<path d="M3 13l2 2 2-2 7-9V2h-2L3 11z" fill="#dfe6f5"/><path d="M2 12l2 2" stroke="#b98a2f" stroke-width="2"/>',
+ blunt:'<rect x="3" y="2" width="10" height="6" fill="#c9ccd6"/><rect x="7" y="8" width="2" height="7" fill="#b98a2f"/>',
+ sun:'<circle cx="8" cy="8" r="3.5" fill="#ffb238"/><path d="M8 0v3M8 13v3M0 8h3M13 8h3M2.5 2.5l2 2M11.5 11.5l2 2M13.5 2.5l-2 2M2.5 13.5l2-2" stroke="#ffb238" stroke-width="1.6"/>',
+ moon:'<path d="M11 2a6.5 6.5 0 1 0 3 9.5A5.5 5.5 0 0 1 11 2z" fill="#8fb6ff"/>',
+ poison:'<path d="M8 1c3 4 5 6 5 9a5 5 0 0 1-10 0c0-3 2-5 5-9z" fill="#b07cff"/>',
+ arcane:'<path d="M8 1l5 7-5 7-5-7z" fill="#ff7bd0"/>',
+ party:'<circle cx="5" cy="5" r="3" fill="#f2c869"/><circle cx="11" cy="5" r="3" fill="#8fb6ff"/><path d="M1 15c0-4 8-4 8 0zM7 15c0-4 8-4 8 0z" fill="#e9ecf7"/>',
+ items:'<path d="M3 5h10l1 10H2z" fill="#c98b4a"/><path d="M5 5a3 3 0 0 1 6 0" stroke="#e9ecf7" fill="none" stroke-width="1.5"/>',
+ relic:'<path d="M8 1l2 5 5 1-4 3 1 5-4-3-4 3 1-5-4-3 5-1z" fill="#f2c869"/>',
+ world:'<circle cx="8" cy="8" r="6.5" fill="#2a7bd6"/><path d="M4 5c3-1 3 2 5 2s2 3 0 4-4 0-5-2z" fill="#5fd08a"/>'
+};
+const ico=n=>`<svg viewBox="0 0 16 16" aria-hidden="true">${ICO[n]}</svg>`;
+const face=(a,b)=>`<svg class="face" viewBox="0 0 8 8" shape-rendering="crispEdges" aria-hidden="true"><rect width="8" height="8" fill="#0a1230"/><rect x="1" y="1" width="6" height="3" fill="${a}"/><rect x="2" y="3" width="4" height="3" fill="#f1c9a0"/><rect x="1" y="6" width="6" height="2" fill="${b}"/><rect x="3" y="4" width="1" height="1" fill="#222"/><rect x="5" y="4" width="1" height="1" fill="#222"/></svg>`;
+const PARTY=[["Zale","#f2a43a","#c4502a",18,112,128,14,22],["Valere","#6a8cff","#39459c",18,96,121,19,26],["Garl","#7a4b2a","#3f7d4a",18,150,163,6,9]];
+const partyHtml=()=>PARTY.map(p=>`<div class="ch">${face(p[1],p[2])}<span class="nm">${p[0]}</span><span class="lv">Lv ${p[3]}</span>
+ <div class="bars"><div>HP ${p[4]}/${p[5]}<div class="bar"><i style="width:${p[4]/p[5]*100}%;background:var(--hp)"></i></div></div><div>MP ${p[6]}/${p[7]}<div class="bar"><i style="width:${p[6]/p[7]*100}%;background:var(--mp)"></i></div></div></div></div>`).join("");
+const hdr=(r)=>`<div class="hdr"><span class="area">Forbidden Cavern</span><span class="meta">${r}</span></div>`;
+
+const VIEWS={
+ explore:()=>`<div class="scr">${hdr('<span><b>248</b> gold</span><span>6:42</span>')}
+  <div class="main">
+   <div class="col">
+    <div class="pn"><h3>Party</h3>${partyHtml()}</div>
+    <div class="pn"><h3>Objective</h3><div class="obj">Head to Elder Mist Trials<small>Exit north, then east on the world map</small></div></div>
+    <div class="pn"><h3>This area</h3><div class="prog"><span>Treasures</span><b>3 / 7</b><span>Rainbow Conch</span><b>0 / 1</b></div></div>
+   </div>
+   <div class="col"><div class="pn mapbox"><canvas id="map" width="760" height="640" aria-label="Dungeon map charted from explored rooms"></canvas></div></div>
+  </div>
+  <div class="cmds">${[["party","Party"],["items","Items"],["relic","Relics"],["world","World Map"]].map(c=>`<button class="cmd" data-go="menu">${ico(c[0])}${c[1]}</button>`).join("")}</div></div>`,
+ battle:()=>{const en=(n,hp,cd,locks,who,hot)=>`<div class="en"><div class="cd ${hot?'hot':''}">${cd}</div><div><div class="nm">${n}<span>${hp}</span></div>
+   <div class="bar"><i style="width:${parseInt(hp)}%;background:var(--bad)"></i></div>
+   <div class="locks">${locks.map(l=>`<div class="lock ${l[1]?'x':''}">${ico(l[0])}</div>`).join("")}</div><div class="who">${who}</div></div></div>`;
+  return `<div class="scr">${hdr('<span>Turn <b>4</b></span>')}
+  <div class="main">
+   <div class="col">
+    <div class="pn"><h3>Live Mana</h3><div class="orbs"><div class="orb on"></div><div class="orb on"></div><div class="orb"></div><span style="color:var(--dim);font-size:2.1cqw">2 on the field</span></div>
+     <div class="boost"><span>Zale boost</span><span style="color:var(--sun)">+1 Sun</span><span>Valere boost</span><span>none</span></div></div>
+    <div class="pn"><h3>Combo points</h3><div class="pips"><i class="pip on"></i><i class="pip on"></i><i class="pip"></i></div>
+     <div class="combo"><b>Solstice Strike</b> · 2 pts · Sun + Moon</div><div class="combo no"><b>Mending Light</b> · 3 pts</div></div>
+    <div class="pn"><h3>Party</h3>${partyHtml()}</div>
+   </div>
+   <div class="col"><div class="pn" style="flex:1"><h3>Enemy casts</h3>
+    ${en("Bonepile","62%",1,[["sword",1],["sun",0],["moon",0]],"Next up: <b>Zale</b> breaks Sun · <b>Valere</b> breaks Moon",1)}
+    ${en("Luslug","100%",3,[["blunt",0],["blunt",0],["poison",0],["sword",1]],"<b>Garl</b> breaks Blunt ×2",0)}
+    ${en("Luslug","35%","–",[],"No cast charging",0)}
+   </div></div>
+  </div></div>`},
+ menu:()=>`<div class="scr">${hdr('<span><b>248</b> gold</span><span>6:42</span>')}
+  <div class="gm"><div class="gmt"><span class="on">Party</span><span>Items</span><span>Relics</span><span>Map</span></div>
+   <div class="gmb"><div><div class="ch">${face("#6a8cff","#39459c")}<span class="nm">Valere</span><span class="lv">Lv 18</span><div class="bars"><div>HP 96/121<div class="bar"><i style="width:79%;background:var(--hp)"></i></div></div><div>MP 19/26<div class="bar"><i style="width:73%;background:var(--mp)"></i></div></div></div></div>
+     <div class="prog" style="margin-top:2cqw"><span>Attack</span><b>41</b><span>Defense</span><b>33</b><span>Magic Atk</span><b>38</b><span>Magic Def</span><b>36</b></div></div>
+    <div class="eq"><div class="sel"><span>Moonerang Staff</span><small>Weapon</small></div><div><span>Cloud Cape</span><small>Armor</small></div><div><span>Solstice Sash</span><small>Trinket</small></div><div><span>Leaf Charm</span><small>Trinket</small></div></div></div></div>
+  <div class="note">Placeholder. The real thing here is the game's own menu, drawn by the game on this screen.</div></div>`
+};
+const CAPS={
+ explore:"Exploring: the party and your next destination sit on the left, the charted dungeon on the right. The four buttons open the game's own menu sections down here.",
+ battle:"A fight starts and the bottom screen swaps to the battle board on its own: what each enemy is casting, the locks left to break and who can break them, Live Mana and combo points.",
+ menu:"Open the menu and it appears on the bottom screen. The game keeps showing the world on top, which no single-screen version can do."
+};
+let state="explore",t=0;
+function show(s){state=s;$("#bot").innerHTML=VIEWS[s]();$("#cap").textContent=CAPS[s];
+ document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected",b.dataset.s===s));
+ if(s==="explore")drawMap();drawGame();}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-s],[data-go]");if(b)show(b.dataset.s||b.dataset.go)});
+
+/* parchment dungeon map */
+function drawMap(){const c=$("#map");if(!c)return;const g=c.getContext("2d"),W=c.width,H=c.height,u=18,ox=38,oy=70;
+ const gr=g.createRadialGradient(W/2,H/2,60,W/2,H/2,W*.75);gr.addColorStop(0,"#e6d3a3");gr.addColorStop(1,"#c9ae74");g.fillStyle=gr;g.fillRect(0,0,W,H);
+ let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+ for(let i=0;i<900;i++){g.fillStyle=`rgba(90,61,30,${rnd()*.07})`;g.fillRect(rnd()*W,rnd()*H,2+rnd()*3,1+rnd()*2)}
+ const R=[[16,22,8,5],[19,16,2,6],[13,9,14,7],[7,12,6,2],[2,9,5,7],[27,12,5,2],[19,5,2,4]];
+ g.lineJoin="round";
+ const path=()=>{g.beginPath();R.forEach(r=>g.rect(ox+r[0]*u,oy+r[1]*u,r[2]*u,r[3]*u))};
+ g.save();g.shadowColor="rgba(60,35,10,.45)";g.shadowBlur=14;g.strokeStyle="#5a3d1e";g.lineWidth=7;path();g.stroke();g.restore();
+ g.fillStyle="#d8bf88";path();g.fill();
+ g.strokeStyle="rgba(90,61,30,.18)";g.lineWidth=1;R.forEach(r=>{for(let x=1;x<r[2];x++){g.beginPath();g.moveTo(ox+(r[0]+x)*u,oy+r[1]*u);g.lineTo(ox+(r[0]+x)*u,oy+(r[1]+r[3])*u);g.stroke()}for(let y=1;y<r[3];y++){g.beginPath();g.moveTo(ox+r[0]*u,oy+(r[1]+y)*u);g.lineTo(ox+(r[0]+r[2])*u,oy+(r[1]+y)*u);g.stroke()}});
+ /* uncharted edges fade out */
+ const fog=(x,y,w,h,dir)=>{const X=ox+x*u,Y=oy+y*u,l=dir?g.createLinearGradient(X,Y,X+w*u,Y):g.createLinearGradient(X,Y+h*u,X,Y);l.addColorStop(0,"rgba(214,190,134,0)");l.addColorStop(1,"#cfb57c");g.fillStyle=l;g.fillRect(X-4,Y-4,w*u+8,h*u+8)};
+ fog(29,11,3.4,4,1);fog(18,4.6,4,3,0);
+ g.font='600 22px "Pixelify Sans",monospace';g.textAlign="center";g.fillStyle="#5a3d1e";g.fillText("?",ox+34*u,oy+13.5*u);g.fillText("?",ox+20*u,oy+3.6*u);
+ const mark=(x,y,kind,label)=>{const X=ox+x*u,Y=oy+y*u;g.save();g.translate(X,Y);
+  if(kind==="save"){g.fillStyle="#2a7bd6";g.beginPath();g.arc(0,0,9,0,7);g.fill();g.fillStyle="#fff";g.beginPath();g.arc(0,0,3.5,0,7);g.fill()}
+  if(kind==="camp"){g.fillStyle="#c4502a";g.beginPath();g.moveTo(0,-11);g.lineTo(9,8);g.lineTo(-9,8);g.fill();g.fillStyle="#ffb238";g.beginPath();g.moveTo(0,-3);g.lineTo(4,8);g.lineTo(-4,8);g.fill()}
+  if(kind==="chest"||kind==="open"){g.strokeStyle="#5a3d1e";g.lineWidth=3;g.fillStyle=kind==="chest"?"#f2c869":"rgba(0,0,0,0)";g.fillRect(-9,-7,18,14);g.strokeRect(-9,-7,18,14);g.beginPath();g.moveTo(-9,-1);g.lineTo(9,-1);g.stroke()}
+  if(kind==="exit"){g.fillStyle="#5a3d1e";g.beginPath();g.moveTo(0,10);g.lineTo(9,-4);g.lineTo(-9,-4);g.fill()}
+  g.restore();if(label){g.font='500 17px "Pixelify Sans",monospace';g.textAlign="center";g.fillStyle="#3d2912";g.fillText(label,X,Y+28)}};
+ mark(15.5,12.5,"save","Save");mark(20,24.5,"camp","Camp");mark(4.5,11.5,"open");mark(24.5,10.6,"chest");mark(4.5,14,"chest");mark(20,27.8,"exit","To world map");
+ /* party arrow */
+ const px=ox+20.5*u,py=oy+13*u,p=1+Math.sin(t/9)*.18;g.save();g.translate(px,py);g.strokeStyle="rgba(42,123,214,.5)";g.lineWidth=3;g.beginPath();g.arc(0,0,17*p,0,7);g.stroke();
+ g.fillStyle="#1d4fa8";g.strokeStyle="#fff";g.lineWidth=2.5;g.beginPath();g.moveTo(0,-13);g.lineTo(10,10);g.lineTo(0,5);g.lineTo(-10,10);g.closePath();g.fill();g.stroke();g.restore();
+ /* title + compass */
+ g.font='600 26px "Pixelify Sans",monospace';g.textAlign="left";g.fillStyle="#3d2912";g.fillText("Forbidden Cavern",26,42);
+ g.font='500 16px "Pixelify Sans",monospace';g.fillStyle="#6d5230";g.fillText("charted 61%",28,64);
+ g.save();g.translate(W-58,58);g.strokeStyle="#5a3d1e";g.lineWidth=2;g.beginPath();g.arc(0,0,26,0,7);g.stroke();g.fillStyle="#5a3d1e";g.beginPath();g.moveTo(0,-24);g.lineTo(6,0);g.lineTo(0,24);g.lineTo(-6,0);g.fill();g.fillStyle="#e6d3a3";g.font='600 13px "Pixelify Sans",monospace';g.textAlign="center";g.fillText("N",0,-6);g.restore();
+}
+
+/* top screen: a stand-in pixel scene (not game art) */
+function drawGame(){const c=$("#game"),g=c.getContext("2d");g.fillStyle="#050a14";g.fillRect(0,0,320,180);
+ for(let y=0;y<9;y++)for(let x=0;x<18;x++){g.fillStyle=(x+y)%2?"#16424a":"#1a4d55";g.fillRect(16+x*16,44+y*14,16,14)}
+ g.fillStyle="#0e2233";g.fillRect(16,14,288,30);for(let x=0;x<18;x++){g.fillStyle=x%2?"#16314a":"#1b3a57";g.fillRect(16+x*16,18,15,24)}
+ for(let i=0;i<10;i++){g.fillStyle=`rgba(150,220,255,${.25+.2*Math.sin(t/4+i)})`;g.fillRect(232+i*3,14,2,30+((t+i*5)%14))}
+ [[60,30],[180,30]].forEach(([x,y])=>{const r=g.createRadialGradient(x,y,1,x,y,34+Math.sin(t/5)*2);r.addColorStop(0,"rgba(255,170,60,.75)");r.addColorStop(1,"rgba(255,170,60,0)");g.fillStyle=r;g.fillRect(x-40,y-40,80,80);g.fillStyle="#ffcf6b";g.fillRect(x-2,y-4,4,6)});
+ const guy=(x,y,a,b)=>{g.fillStyle="rgba(0,0,0,.35)";g.fillRect(x-1,y+13,10,3);g.fillStyle=b;g.fillRect(x,y+5,8,8);g.fillStyle="#f1c9a0";g.fillRect(x+1,y+1,6,5);g.fillStyle=a;g.fillRect(x,y-1,8,3)};
+ const bob=Math.round(Math.sin(t/6));
+ if(state==="battle"){guy(96,112+bob,"#f2a43a","#c4502a");guy(120,126,"#6a8cff","#39459c");guy(84,134,"#7a4b2a","#3f7d4a");
+  [[196,96],[224,116],[200,136]].forEach(([x,y],i)=>{g.fillStyle="rgba(0,0,0,.35)";g.fillRect(x-1,y+11,16,3);g.fillStyle=i?"#7fbf5a":"#d9d2c0";g.fillRect(x,y+2,14,10);g.fillStyle="#222";g.fillRect(x+3,y+5,2,2);g.fillRect(x+9,y+5,2,2)});}
+ else{guy(150,100+bob,"#f2a43a","#c4502a");guy(136,108,"#6a8cff","#39459c");guy(124,116,"#7a4b2a","#3f7d4a");g.fillStyle="#f2c869";g.fillRect(236,84,12,9);g.fillStyle="#5a3d1e";g.fillRect(236,87,12,2)}
+ const v=g.createRadialGradient(160,100,60,160,100,200);v.addColorStop(0,"rgba(0,0,0,0)");v.addColorStop(1,"rgba(0,0,10,.75)");g.fillStyle=v;g.fillRect(0,0,320,180);
+}
+show("explore");
+if(!matchMedia("(prefers-reduced-motion: reduce)").matches)setInterval(()=>{t++;drawGame();if(state==="explore")drawMap()},90);
+document.fonts&&document.fonts.ready.then(()=>state==="explore"&&drawMap());
+</script>
